@@ -77,5 +77,11 @@ After results calculation, either return to the main menu or exit the program:
 ![Screenshot of the return to menu or exit the program display](/project/screenshots/return_or_exit_menu.jpg)
 
 ---
+### Disclaimer
+
+The information provided in PharmCalc is for general informational purposes only and is not intended to be a substitute for professional medical advice, diagnosis, or treatment. Always seek the advice of your physician or other qualified health providers with any questions you may have regarding a medical condition. Reliance on any information provided is solely at your own risk.
+
+
+---
 #### Version:
 1.0
