@@ -1,19 +1,17 @@
 #PharmCalc Program
 import sys
 import time
+import PySimpleGUI as sg
 from tabulate import tabulate
 from pyfiglet import Figlet
+from PIL import Image, ImageDraw, ImageFont
+import io
 
 def main():
     running = True
     while running:
-        figlet = Figlet()
-        figlet.setFont(font='slant')
-        print(figlet.renderText("Welcome to PharmCalc v1.0!"))
-        time.sleep(0.5)
-        print(display_menu_main())
-        main_input = get_options()
-        if main_input == 1:
+        event, values = menu_main()
+        if event == 'Creatinine Clearance':
             age, weight, SCr, gender = get_input_CrCl()
             result = cal_CrCl(age, weight, SCr, gender)
             print(f"{round(result,2)}ml/min")
@@ -25,7 +23,7 @@ def main():
             else:
                 main_input = 3
 
-        if main_input == 2:
+        if event == 'ASCVD Risk Score - SG':
             gender, race, age, total_cholesterol, smoke, HDL_input, BP_input, BP_tx = get_input_ASCVD()
             total_points = 0
             if gender == "M":
@@ -64,20 +62,44 @@ def main():
                 else:
                     main_input = 3
 
-
-
-        if main_input == 3:
+        if event == 'Exit':
             print("Thanks for using PharmCalc!")
             time.sleep(0.5)
             sys.exit()
 
 
-def display_menu_main():
-    main_menu = [{"Key":"1", "Options":"Creatinine Clearance"},
-        {"Key":"2", "Options":"ASCVD Risk Score - SG"},
-        {"Key":"3", "Options":"Exit"}]
-    time.sleep(0.5)
-    return(tabulate(main_menu, headers="keys", tablefmt="grid"))
+def menu_main():
+    figlet = Figlet()
+    figlet.setFont(font='slant')
+    text = figlet.renderText("Welcome to PharmCalc v1.0!")
+
+    # Render Figlet text to an image
+    font = ImageFont.truetype("cour.ttf", 20)
+    img = Image.new('RGB', (1000, 250), color=(255, 255, 255))
+    d = ImageDraw.Draw(img)
+    d.text((10, 10), text, font=font, fill=(0, 0, 0))
+
+    # Convert to bytes and display in PySimpleGUI
+    with io.BytesIO() as output:
+        img.save(output, format="PNG")
+        data = output.getvalue()
+
+    layout = [[sg.Image(data=data)],
+              [sg.Button('Creatinine Clearance'), sg.Button('ASCVD Risk Score - SG'), sg.Button('Exit') ]]
+    
+    window = sg.Window('PharmCalc v1.0 Main Menu', layout, resizable=True)
+
+    while True:
+        event, values = window.read()
+        if event == sg.WIN_CLOSED or event == 'Exit':
+            break
+        if event == 'Creatinine Clearance':
+            sg.popup('You clicked 1')
+
+        elif event == 'ASCVD Risk Score - SG':
+            sg.popup('You clicked 2')
+    window.close()
+    return event, values
 
 
 def display_menu_return():
