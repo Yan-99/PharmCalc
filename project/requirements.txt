@@ -2,3 +2,5 @@ sys
 time
 tabulate
 pyfiglet
+PySimpleGUI
+Pillow
